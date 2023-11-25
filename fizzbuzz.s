@@ -1,10 +1,11 @@
 .data
     x: .space 4
     formatScanf: .asciz "%d"
+    formatPrintf: .asciz "%d\n"
     zero: .long 0
-    fizz: .asciz "%d:fizz\n"
-    buzz: .asciz "%d:buzz\n"
-    fizzbuzz: .asciz "%d:fizzbuzz\n"
+    fizz: .asciz "fizz\n"
+    buzz: .asciz "buzz\n"
+    fizzbuzz: .asciz "fizzbuzz\n"
 
 .text
 .global main
@@ -21,8 +22,7 @@ main:
 et_for:
 
     // conditia de final
-    movl x, %ebx
-    cmp %ebx, %ecx
+    cmp x, %ecx
     je et_exit
 
     // if i%15 == 0
@@ -49,50 +49,50 @@ et_for:
     cmp %edx, zero
     je et_pB
 
-    inc %ecx
+    pushl %ecx 
+    pushl %ecx
+    push $formatPrintf
+    call printf
+    add $8, %esp
+    popl %ecx
+
+    incl %ecx
     jmp et_for
 
 et_pFB:
 
-    push %ecx
-    push x
-    mov %ecx, x
-    push x
+    pushl %ecx
     push $fizzbuzz
     call printf
-    add $8, %esp
-    pop x
-    pop %ecx
+    add $4, %esp
+    popl %ecx
+    
     inc %ecx
     jmp et_for
 
 et_pF:
 
-    push %ecx
-    push x
-    mov %ecx, x
-    push x
+    pushl %ecx
     push $fizz
     call printf
-    add $8, %esp
-    pop x
-    pop %ecx
+    add $4, %esp
+    popl %ecx
+
     inc %ecx
     jmp et_for
 
 et_pB:
-    push %ecx
-    push x
-    mov %ecx, x
-    push x
+
+    pushl %ecx
     push $buzz
     call printf
-    add $8, %esp
-    pop x
-    pop %ecx
+    add $4, %esp
+    popl %ecx
+
     inc %ecx
     jmp et_for
-    
+
+
 et_exit:
     movl $1, %eax
     xorl %ebx, %ebx
